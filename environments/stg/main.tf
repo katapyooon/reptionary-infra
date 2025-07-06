@@ -23,3 +23,9 @@ module "vpc" {
     "1c" = "10.0.12.0/24"
   }
 }
+
+module "ecr" {
+    source = "../../modules/ecr"
+
+    environment = "stg"
+}
