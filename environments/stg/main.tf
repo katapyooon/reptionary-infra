@@ -53,3 +53,23 @@ module "sg" {
     }
   ]
 }
+
+module "alb" {
+  source = "../../modules/alb"
+
+  environment = "stg"
+  vpc_id      = module.vpc.vpc_id
+  security_group_id  = module.sg.security_group_id
+  public_subnet_ids  = module.vpc.public_subnet_ids
+  ingress_rules = [
+    {
+      description = "Allow HTTP"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+  
+}
+
