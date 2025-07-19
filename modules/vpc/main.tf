@@ -22,3 +22,17 @@ resource "aws_subnet" "public" {
     Environment = var.environment
   }
 }
+
+resource "aws_subnet" "private" {
+  for_each = var.private_subnet_cidrs
+
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = each.value
+  availability_zone       = "ap-northeast-${each.key}"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name        = "reptionary-${var.environment}-private-${each.key}"
+    Environment = var.environment
+  }
+}

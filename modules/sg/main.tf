@@ -32,3 +32,32 @@ resource "aws_security_group" "this" {
     ManagedBy   = "terraform"
   }
 }
+
+resource "aws_security_group" "rds" {
+  name        = "reptionary-${var.environment}-rds-sg"
+  description = "Security group for RDS in ${var.environment} environment"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "Allow PostgreSQL from ECS"
+    from_port        = 5432
+    to_port          = 5432
+    protocol         = "tcp"
+    security_groups  = [aws_security_group.this.id]  # ECSからの通信のみ許可
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "reptionary-${var.environment}-rds-sg"
+    Environment = var.environment
+    Project     = "reptionary"
+    ManagedBy   = "terraform"
+  }
+}
