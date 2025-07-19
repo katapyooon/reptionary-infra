@@ -85,3 +85,23 @@ module "ecs" {
   alb_target_group_arn = module.alb.target_group_arn
   alb_listener_arn     = module.alb.listener_arn
 }
+
+module "rds" {
+  source = "../../modules/rds"
+
+  environment = "stg"
+  db_username         = data.aws_ssm_parameter.db_username.value
+  db_password         = data.aws_ssm_parameter.db_password.value
+  db_name             = "reptionary"
+  private_subnet_ids  = module.vpc.private_subnet_ids
+  security_group_id   = module.sg.rds_security_group_id
+}
+
+data "aws_ssm_parameter" "db_username" {
+  name = "/reptionary/stg/db_username"
+}
+
+data "aws_ssm_parameter" "db_password" {
+  name            = "/reptionary/stg/db_password"
+  with_decryption = true
+}
