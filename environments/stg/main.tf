@@ -73,3 +73,15 @@ module "alb" {
   
 }
 
+module "ecs" {
+  source = "../../modules/ecs"
+
+  environment = "stg"
+  vpc_id              = module.vpc.vpc_id
+  public_subnet_ids   = module.vpc.public_subnet_ids
+  security_group_id   = module.sg.security_group_id
+  ecr_image_url       = module.ecr.image_url
+
+  alb_target_group_arn = module.alb.target_group_arn
+  alb_listener_arn     = module.alb.listener_arn
+}
