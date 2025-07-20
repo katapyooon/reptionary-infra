@@ -33,3 +33,8 @@ terraform.rc
 .terraform.lock.hcl
 */.terraform.lock.hcl
 **/.terraform.lock.hcl
+
+# Ignore Terraform state files
+.terraform.tfstate
+*/.terraform.tfstate
+**/.terraform.tfstate
