@@ -79,6 +79,7 @@ module "ecs" {
   environment = "stg"
   vpc_id              = module.vpc.vpc_id
   public_subnet_ids   = module.vpc.public_subnet_ids
+
   security_group_id   = module.sg.security_group_id
   ecr_image_url       = module.ecr.image_url
 
@@ -104,4 +105,14 @@ data "aws_ssm_parameter" "db_username" {
 data "aws_ssm_parameter" "db_password" {
   name            = "/reptionary/stg/db_password"
   with_decryption = true
+}
+
+module "route53" {
+  source = "../../modules/route53"
+
+  environment = "stg"
+  root_domain            = "reptionary.jp"
+  subdomain              = "staging.reptionary.jp"
+  a_record_alias_name    = module.alb.dns_name
+  a_record_alias_zone_id = module.alb.zone_id
 }
